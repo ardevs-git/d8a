@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Scientist Portfolio | D8A LABS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #00f0ff;
+            --secondary: #ff00f0;
+            --dark: #0a0a14;
+            --light: #f0f0ff;
+        }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode {
+            background-color: var(--dark);
+            color: var(--light);
+        }
+        
+        .light-mode {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .border-gradient {
+            border: 2px solid transparent;
+            background: linear-gradient(var(--dark), var(--dark)) padding-box,
+                        linear-gradient(90deg, var(--primary), var(--secondary)) border-box;
+        }
+        
+        .glass-card {
+            background: rgba(10, 10, 20, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+        }
+        
+        .neon-shadow {
+            box-shadow: 0 0 10px var(--primary), 0 0 20px rgba(0, 240, 255, 0.3);
+        }
+        
+        .neon-text {
+            text-shadow: 0 0 5px var(--primary), 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+        
+        .skill-bar {
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 1s ease;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(var(--primary), var(--secondary));
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: -26px;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 5px var(--primary), 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+        
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        
+        .project-card {
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 20px 30px rgba(0, 240, 255, 0.2);
+        }
+        
+        .typewriter {
+            border-right: 3px solid var(--primary);
+            white-space: nowrap;
+            overflow: hidden;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary) }
+        }
+        
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(0, 240, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); }
+        }
+        
+        .scroll-down {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 50px;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+        }
+        
+        .scroll-down::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            margin-left: -3px;
+            background-color: var(--primary);
+            border-radius: 100%;
+            animation: scrollDown 2s infinite;
+        }
+        
+        @keyframes scrollDown {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(15px);
+                opacity: 0;
+            }
+        }
+        
+        .contact-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .contact-input:focus {
+            outline: none;
+            border-bottom: 2px solid var(--primary);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .social-icon {
+            transition: all 0.3s;
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-5px);
+            color: var(--primary);
+        }
+        
+        .toggle-checkbox:checked {
+            right: 0;
+            background-color: var(--primary);
+        }
+        
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: var(--primary);
+        }
+        
+        .toggle-label {
+            transition: all 0.3s;
+        }
+        
+        .model-container {
+            width: 100%;
+            height: 300px;
+            position: relative;
+        }
+        
+        /* Mobile Menu Styles */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 10, 20, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .mobile-menu.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .mobile-menu a {
+            font-size: 1.5rem;
+            margin: 1rem 0;
+            color: var(--light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .mobile-menu a:hover {
+            color: var(--primary);
+        }
+        
+        .close-mobile-menu {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 2rem;
+            color: var(--light);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-mobile-menu:hover {
+            color: var(--primary);
+        }
+        
+        @media (max-width: 768px) {
+            .typewriter {
+                white-space: normal;
+                border-right: none;
+                animation: none;
+            }
+            
+            .timeline-item::before {
+                left: 10px;
+            }
+            
+            .timeline-dot {
+                left: 6px;
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-40 glass-card">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <span class="text-xl font-bold text-gradient">D8A LABS</span>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#home" class="px-3 py-2 rounded-md text-sm font-medium hover:text-primary transition-all">Home</a>
+                        <a href="#about" class="px-3 py-2 rounded-md text-sm font-medium hover:text-primary transition-all">About</a>
+                        <a href="#projects" class="px-3 py-2 rounded-md text-sm font-medium hover:text-primary transition-all">Projects</a>
+                        <a href="#labs" class="px-3 py-2 rounded-md text-sm font-medium hover:text-primary transition-all">Labs</a>
+                        <a href="#blog" class="px-3 py-2 rounded-md text-sm font-medium hover:text-primary transition-all">Blog</a>
+                        <a href="#contact" class="px-3 py-2 rounded-md text-sm font-medium hover:text-primary transition-all">Contact</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu">
+        <button id="close-mobile-menu" class="close-mobile-menu">×</button>
+        <a href="#home" class="mobile-menu-link">Home</a>
+        <a href="#about" class="mobile-menu-link">About</a>
+        <a href="#projects" class="mobile-menu-link">Projects</a>
+        <a href="#labs" class="mobile-menu-link">Labs</a>
+        <a href="#blog" class="mobile-menu-link">Blog</a>
+        <a href="#contact" class="mobile-menu-link">Contact</a>
+    </div>
+    
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="text-center">
+                <h1 class="text-5xl md:text-7xl font-bold mb-4">
+                    <span class="text-gradient">Building the Future</span>
+                </h1>
+                <h2 class="text-3xl md:text-5xl font-bold mb-6">
+                    <span class="typewriter">with Data & Code</span>
+                </h2>
+                <p class="text-lg md:text-xl max-w-2xl mx-auto mb-10 opacity-90">
+                    Transforming raw data into intelligent solutions through machine learning, computer vision, and full-stack AI development.
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="#projects" class="px-8 py-3 rounded-full bg-gradient-to-r from-primary to-secondary text-dark font-bold hover:opacity-90 transition-all transform hover:scale-105">
+                        View Projects
+                    </a>
+                    <a href="#" class="px-8 py-3 rounded-full border-gradient text-light font-bold hover:bg-white hover:bg-opacity-10 transition-all transform hover:scale-105">
+                        Download Resume
+                    </a>
+                </div>
+            </div>
+            <div class="absolute bottom-10 left-0 right-0 flex justify-center">
+                <div class="scroll-down"></div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- About Section -->
+    <section id="about" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">
+                    <span class="text-gradient">About Me</span>
+                </h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="glass-card p-8 rounded-xl">
+                    <h3 class="text-2xl font-bold mb-4 neon-text">My Journey</h3>
+                    <div class="relative pl-10">
+                        <div class="timeline-item relative mb-8">
+                            <div class="timeline-dot"></div>
+                            <h4 class="text-xl font-bold mb-2">Started Coding</h4>
+                            <p class="opacity-80">2015 - First lines of Python</p>
+                        </div>
+                        <div class="timeline-item relative mb-8">
+                            <div class="timeline-dot"></div>
+                            <h4 class="text-xl font-bold mb-2">Data Science Discovery</h4>
+                            <p class="opacity-80">2018 - First ML model (Linear Regression)</p>
+                        </div>
+                        <div class="timeline-item relative mb-8">
+                            <div class="timeline-dot"></div>
+                            <h4 class="text-xl font-bold mb-2">Kaggle Competitions</h4>
+                            <p class="opacity-80">2020 - First Kaggle submission</p>
+                        </div>
+                        <div class="timeline-item relative mb-8">
+                            <div class="timeline-dot"></div>
+                            <h4 class="text-xl font-bold mb-2">D8A LABS</h4>
+                            <p class="opacity-80">2023 - Founded experimental AI lab</p>
+                        </div>
+                        <div class="timeline-item relative">
+                            <div class="timeline-dot"></div>
+                            <h4 class="text-xl font-bold mb-2">Future Vision</h4>
+                            <p class="opacity-80">2025+ - AI-powered products & research</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="glass-card p-8 rounded-xl mb-8">
+                        <h3 class="text-2xl font-bold mb-4 neon-text">Skills & Expertise</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span>Python & Data Science</span>
+                                    <span>95%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="skill-bar rounded-full h-2" style="width: 95%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span>Machine Learning</span>
+                                    <span>90%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="skill-bar rounded-full h-2" style="width: 90%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span>Deep Learning</span>
+                                    <span>85%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="skill-bar rounded-full h-2" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span>Computer Vision</span>
+                                    <span>88%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="skill-bar rounded-full h-2" style="width: 88%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span>NLP</span>
+                                    <span>82%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="skill-bar rounded-full h-2" style="width: 82%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-8 rounded-xl">
+                        <h3 class="text-2xl font-bold mb-4 neon-text">Values & Approach</h3>
+                        <p class="mb-4 opacity-90">
+                            I believe in the power of data to transform industries and improve lives. My approach combines rigorous scientific methodology with creative problem-solving.
+                        </p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-atom text-primary mr-2"></i>
+                                <span>Innovation</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-chart-line text-primary mr-2"></i>
+                                <span>Impact</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-code text-primary mr-2"></i>
+                                <span>Clean Code</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-lightbulb text-primary mr-2"></i>
+                                <span>Creativity</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">
+                    <span class="text-gradient">Featured Projects</span>
+                </h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="project-card glass-card rounded-xl overflow-hidden transition-all duration-500">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Google Review Automation" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                        <div class="absolute bottom-0 left-0 p-4">
+                            <h3 class="text-xl font-bold">Google Review Automation</h3>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">Python</span>
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">Selenium</span>
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">NLP</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="mb-4 opacity-90">Automated analysis and response system for Google business reviews using sentiment analysis and template generation.</p>
+                        <div class="flex justify-between">
+                            <a href="#" class="text-primary hover:underline">View Details</a>
+                            <a href="#" class="text-primary hover:underline">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 2 -->
+                <div class="project-card glass-card rounded-xl overflow-hidden transition-all duration-500">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=765&q=80" alt="Prompt-to-SVG Generator" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                        <div class="absolute bottom-0 left-0 p-4">
+                            <h3 class="text-xl font-bold">Prompt-to-SVG Generator</h3>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">Python</span>
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">LLM</span>
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">SVG</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="mb-4 opacity-90">Generates scalable vector graphics from natural language prompts using fine-tuned language models.</p>
+                        <div class="flex justify-between">
+                            <a href="#" class="text-primary hover:underline">View Details</a>
+                            <a href="#" class="text-primary hover:underline">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 3 -->
+                <div class="project-card glass-card rounded-xl overflow-hidden transition-all duration-500">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Image Matching Challenge" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                        <div class="absolute bottom-0 left-0 p-4">
+                            <h3 class="text-xl font-bold">Image Matching Challenge</h3>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">Python</span>
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">CV</span>
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">Kaggle</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="mb-4 opacity-90">Computer vision solution for matching similar images across different conditions and transformations.</p>
+                        <div class="flex justify-between">
+                            <a href="#" class="text-primary hover:underline">View Details</a>
+                            <a href="#" class="text-primary hover:underline">Kaggle</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 4 -->
+                <div class="project-card glass-card rounded-xl overflow-hidden transition-all duration-500">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1639762681057-408e52192e55?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1632&q=80" alt="ML Regression Apps" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                        <div class="absolute bottom-0 left-0 p-4">
+                            <h3 class="text-xl font-bold">ML Regression Apps</h3>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">Python</span>
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">Streamlit</span>
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">ML</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="mb-4 opacity-90">Interactive web applications demonstrating various regression techniques with real-time visualization.</p>
+                        <div class="flex justify-between">
+                            <a href="#" class="text-primary hover:underline">View Details</a>
+                            <a href="#" class="text-primary hover:underline">Live Demo</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 5 -->
+                <div class="project-card glass-card rounded-xl overflow-hidden transition-all duration-500">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="R & Visual Arts" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                        <div class="absolute bottom-0 left-0 p-4">
+                            <h3 class="text-xl font-bold">R & Visual Arts Fusion</h3>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">R</span>
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">ggplot2</span>
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">Generative Art</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="mb-4 opacity-90">Data visualization projects blending statistical analysis with generative art techniques.</p>
+                        <div class="flex justify-between">
+                            <a href="#" class="text-primary hover:underline">View Details</a>
+                            <a href="#" class="text-primary hover:underline">Gallery</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 6 -->
+                <div class="project-card glass-card rounded-xl overflow-hidden transition-all duration-500">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=765&q=80" alt="Custom Compiler" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                        <div class="absolute bottom-0 left-0 p-4">
+                            <h3 class="text-xl font-bold">Custom Compiler</h3>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">C++</span>
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">Compiler</span>
+                                <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full">DSL</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="mb-4 opacity-90">Domain-specific language compiler with optimizations for statistical operations.</p>
+                        <div class="flex justify-between">
+                            <a href="#" class="text-primary hover:underline">View Details</a>
+                            <a href="#" class="text-primary hover:underline">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="px-8 py-3 rounded-full border-gradient text-light font-bold hover:bg-white hover:bg-opacity-10 transition-all transform hover:scale-105 inline-block">
+                    View All Projects
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Labs Section -->
+    <section id="labs" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">
+                    <span class="text-gradient">D8A LABS</span>
+                </h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
+                <p class="max-w-2xl mx-auto mt-6 opacity-90">
+                    Experimental projects and research initiatives pushing the boundaries of AI and data science.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 neon-text">Current Research</h3>
+                    <p class="mb-6 opacity-90">
+                        Our lab focuses on innovative applications of machine learning, particularly in areas where AI intersects with creative domains.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="mr-4 mt-1">
+                                <div class="w-8 h-8 rounded-full bg-primary bg-opacity-20 flex items-center justify-center">
+                                    <i class="fas fa-brain text-primary"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-1">Neural Style Transfer</h4>
+                <p class="opacity-80">Real-time artistic style application using optimized CNNs</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="mr-4 mt-1">
+                <div class="w-8 h-8 rounded-full bg-primary bg-opacity-20 flex items-center justify-center">
+                  <i class="fas fa-robot text-primary"></i>
+                </div>
+              </div>
+              <div>
+                <h4 class="font-bold mb-1">AI-Assisted Creativity</h4>
+                <p class="opacity-80">Tools that augment human creativity rather than replace it</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="mr-4 mt-1">
+                <div class="w-8 h-8 rounded-full bg-primary bg-opacity-20 flex items-center justify-center">
+                  <i class="fas fa-chart-network text-primary"></i>
+                </div>
+              </div>
+              <div>
+                <h4 class="font-bold mb-1">Graph Neural Networks</h4>
+                <p class="opacity-80">Novel applications in knowledge representation</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="glass-card p-6 rounded-xl h-full">
+          <div class="model-container" id="model-container">
+            <!-- 3D model will be rendered here -->
+            <canvas id="model-canvas" class="w-full h-full rounded-lg"></canvas>
+          </div>
+          <div class="mt-4 text-center">
+            <p class="opacity-90">Interactive 3D visualization of a neural network architecture</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="glass-card p-8 rounded-xl">
+        <h3 class="text-2xl font-bold mb-6 neon-text text-center">Lab Playground</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-dark border border-gray-700 rounded-lg p-6 text-center hover:border-primary transition-all">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-primary bg-opacity-10 flex items-center justify-center">
+              <i class="fas fa-paint-brush text-2xl text-primary"></i>
+            </div>
+            <h4 class="font-bold mb-2">Style Transfer</h4>
+            <p class="opacity-80 mb-4">Apply artistic styles to your photos</p>
+            <button class="px-4 py-2 rounded-full bg-primary bg-opacity-20 text-primary hover:bg-opacity-30 transition-all">
+              Try It
+            </button>
+          </div>
+          
+          <div class="bg-dark border border-gray-700 rounded-lg p-6 text-center hover:border-primary transition-all">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-primary bg-opacity-10 flex items-center justify-center">
+              <i class="fas fa-comment-dots text-2xl text-primary"></i>
+            </div>
+            <h4 class="font-bold mb-2">Chatbot</h4>
+            <p class="opacity-80 mb-4">Talk to our research assistant</p>
+            <button class="px-4 py-2 rounded-full bg-primary bg-opacity-20 text-primary hover:bg-opacity-30 transition-all">
+              Start Chat
+            </button>
+          </div>
+          
+          <div class="bg-dark border border-gray-700 rounded-lg p-6 text-center hover:border-primary transition-all">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-primary bg-opacity-10 flex items-center justify-center">
+              <i class="fas fa-chart-line text-2xl text-primary"></i>
+            </div>
+            <h4 class="font-bold mb-2">Data Explorer</h4>
+            <p class="opacity-80 mb-4">Visualize complex datasets</p>
+            <button class="px-4 py-2 rounded-full bg-primary bg-opacity-20 text-primary hover:bg-opacity-30 transition-all">
+              Explore
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Blog Section -->
+  <section id="blog" class="py-20 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold mb-4">
+          <span class="text-gradient">Blog & Notes</span>
+        </h2>
+        <div class="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
+        <p class="max-w-2xl mx-auto mt-6 opacity-90">
+          Thoughts, tutorials, and insights from my data science journey.
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Article 1 -->
+        <div class="glass-card rounded-xl overflow-hidden transition-all hover:shadow-lg">
+          <div class="relative h-48 overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Optimizing CNNs" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center mb-2">
+              <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full mr-2">Tutorial</span>
+              <span class="text-xs opacity-70">May 15, 2023</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Optimizing CNNs for Mobile Deployment</h3>
+            <p class="mb-4 opacity-90">Practical techniques to reduce model size while maintaining accuracy for edge devices.</p>
+            <a href="#" class="text-primary hover:underline">Read More →</a>
+          </div>
+        </div>
+        
+        <!-- Article 2 -->
+        <div class="glass-card rounded-xl overflow-hidden transition-all hover:shadow-lg">
+          <div class="relative h-48 overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=765&q=80" alt="NLP Transformers" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center mb-2">
+              <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full mr-2">Research</span>
+              <span class="text-xs opacity-70">April 28, 2023</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Beyond Transformers: Emerging Architectures</h3>
+            <p class="mb-4 opacity-90">Exploring promising alternatives to the transformer architecture for specific NLP tasks.</p>
+            <a href="#" class="text-primary hover:underline">Read More →</a>
+          </div>
+        </div>
+        
+        <!-- Article 3 -->
+        <div class="glass-card rounded-xl overflow-hidden transition-all hover:shadow-lg">
+          <div class="relative h-48 overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1639762681057-408e52192e55?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1632&q=80" alt="Data Visualization" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center mb-2">
+              <span class="text-xs px-2 py-1 bg-primary bg-opacity-20 rounded-full mr-2">Guide</span>
+              <span class="text-xs opacity-70">March 10, 2023</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Data Visualization as Storytelling</h3>
+            <p class="mb-4 opacity-90">How to craft compelling narratives through data visualization in Python and R.</p>
+            <a href="#" class="text-primary hover:underline">Read More →</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center mt-12">
+        <a href="#" class="px-8 py-3 rounded-full border-gradient text-light font-bold hover:bg-white hover:bg-opacity-10 transition-all transform hover:scale-105 inline-block">
+          View All Articles
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Contact Section -->
+  <section id="contact" class="py-20 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold mb-4">
+          <span class="text-gradient">Get In Touch</span>
+        </h2>
+        <div class="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
+        <p class="max-w-2xl mx-auto mt-6 opacity-90">
+          Interested in collaboration or just want to chat about data science? Reach out!
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div class="glass-card p-8 rounded-xl">
+          <h3 class="text-2xl font-bold mb-6 neon-text">Send a Message</h3>
+          <form id="contact-form" class="space-y-6">
+            <div>
+              <label for="name" class="block mb-2">Name</label>
+              <input type="text" id="name" name="name" class="w-full px-4 py-3 rounded-lg contact-input" required>
+            </div>
+            <div>
+              <label for="email" class="block mb-2">Email</label>
+              <input type="email" id="email" name="email" class="w-full px-4 py-3 rounded-lg contact-input" required>
+            </div>
+            <div>
+              <label for="subject" class="block mb-2">Subject</label>
+              <input type="text" id="subject" name="subject" class="w-full px-4 py-3 rounded-lg contact-input" required>
+            </div>
+            <div>
+              <label for="message" class="block mb-2">Message</label>
+              <textarea id="message" name="message" rows="5" class="w-full px-4 py-3 rounded-lg contact-input" required></textarea>
+            </div>
+            <button type="submit" class="w-full px-6 py-3 rounded-full bg-gradient-to-r from-primary to-secondary text-dark font-bold hover:opacity-90 transition-all">
+              Send Message
+            </button>
+          </form>
+        </div>
+        
+        <div>
+          <div class="glass-card p-8 rounded-xl mb-8">
+            <h3 class="text-2xl font-bold mb-6 neon-text">Contact Info</h3>
+            <div class="space-y-4">
+              <div class="flex items-start">
+                <div class="mr-4 mt-1">
+                  <i class="fas fa-envelope text-primary"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold">Email</h4>
+                  <a href="mailto:contact@d8alabs.com" class="opacity-80 hover:text-primary transition-all">contact@d8alabs.com</a>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <div class="mr-4 mt-1">
+                  <i class="fas fa-map-marker-alt text-primary"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold">Location</h4>
+                  <p class="opacity-80">San Francisco, CA</p>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <div class="mr-4 mt-1">
+                  <i class="fas fa-clock text-primary"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold">Availability</h4>
+                  <p class="opacity-80">Mon-Fri: 9AM - 5PM PST</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="glass-card p-8 rounded-xl">
+            <h3 class="text-2xl font-bold mb-6 neon-text">Connect With Me</h3>
+            <div class="flex space-x-6 justify-center">
+              <a href="#" class="social-icon text-2xl hover:text-primary">
+                <i class="fab fa-github"></i>
+              </a>
+              <a href="#" class="social-icon text-2xl hover:text-primary">
+                <i class="fab fa-linkedin"></i>
+              </a>
+              <a href="#" class="social-icon text-2xl hover:text-primary">
+                <i class="fab fa-kaggle"></i>
+              </a>
+              <a href="#" class="social-icon text-2xl hover:text-primary">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a href="#" class="social-icon text-2xl hover:text-primary">
+                <i class="fab fa-medium"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer class="py-12 glass-card">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-6 md:mb-0">
+          <span class="text-xl font-bold text-gradient">D8A LABS</span>
+          <p class="mt-2 opacity-80">Building the future with data & code</p>
+        </div>
+        <div class="flex space-x-6">
+          <a href="#" class="opacity-80 hover:text-primary transition-all">Privacy</a>
+          <a href="#" class="opacity-80 hover:text-primary transition-all">Terms</a>
+          <a href="#" class="opacity-80 hover:text-primary transition-all">Sitemap</a>
+        </div>
+      </div>
+      <div class="mt-8 pt-8 border-t border-gray-800 text-center opacity-70">
+        <p>© 2023 D8A LABS. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Back to Top Button -->
+  <button id="back-to-top" class="fixed bottom-8 right-8 w-12 h-12 rounded-full bg-primary bg-opacity-20 flex items-center justify-center text-primary opacity-0 invisible transition-all">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+  
+  <!-- Easter Egg Modal -->
+  <div id="easter-egg-modal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">
+    <div class="glass-card p-8 rounded-xl max-w-md w-full">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-2xl font-bold neon-text">Guess the Model</h3>
+        <button id="close-easter-egg" class="text-2xl hover:text-primary">&times;</button>
+      </div>
+      <p class="mb-6">Can you guess which machine learning model this architecture represents?</p>
+      <div class="bg-dark p-4 rounded-lg mb-6">
+        <pre class="text-xs overflow-x-auto">
+Input Layer → Conv2D → MaxPool → Conv2D → MaxPool → Flatten → Dense → Output
+        </pre>
+      </div>
+      <input type="text" id="model-guess" class="w-full px-4 py-3 rounded-lg contact-input mb-4" placeholder="Your guess...">
+      <button id="submit-guess" class="w-full px-6 py-3 rounded-full bg-gradient-to-r from-primary to-secondary text-dark font-bold hover:opacity-90 transition-all">
+        Submit Guess
+      </button>
+      <p id="guess-feedback" class="mt-4 text-center hidden"></p>
+    </div>
+  </div>
+  
+  <script>
+    // Mobile Menu Functionality
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMobileMenu = document.getElementById('close-mobile-menu');
+    
+    mobileMenuButton.addEventListener('click', function() {
+      mobileMenu.classList.add('active');
+      document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+    });
+    
+    closeMobileMenu.addEventListener('click', function() {
+      mobileMenu.classList.remove('active');
+      document.body.style.overflow = ''; // Re-enable scrolling
+    });
+    
+    // Close mobile menu when clicking on a link
+    document.querySelectorAll('.mobile-menu-link').forEach(link => {
+      link.addEventListener('click', function() {
+        mobileMenu.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+    
+    // Dark/Light Mode Toggle
+    const toggle = document.getElementById('toggle');
+    const body = document.body;
+    
+    // Check for saved user preference or use dark mode as default
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    if (currentTheme === 'light') {
+      body.classList.remove('dark-mode');
+      body.classList.add('light-mode');
+      toggle.checked = true;
+    }
+    
+    toggle.addEventListener('change', function() {
+      if (this.checked) {
+        body.classList.remove('dark-mode');
+        body.classList.add('light-mode');
+        localStorage.setItem('theme', 'light');
+      } else {
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+    
+    // Smooth Scrolling for Navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+    
+    // Back to Top Button
+    const backToTopButton = document.getElementById('back-to-top');
+    
+    window.addEventListener('scroll', function() {
+      if (window.pageYOffset > 300) {
+        backToTopButton.classList.remove('opacity-0', 'invisible');
+        backToTopButton.classList.add('opacity-100', 'visible');
+      } else {
+        backToTopButton.classList.remove('opacity-100', 'visible');
+        backToTopButton.classList.add('opacity-0', 'invisible');
+      }
+    });
+    
+    backToTopButton.addEventListener('click', function() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // GSAP Animations
+    gsap.registerPlugin(ScrollTrigger);
+    
+    // Animate elements on scroll
+    gsap.utils.toArray('.project-card, .glass-card').forEach(card => {
+      gsap.from(card, {
+        scrollTrigger: {
+          trigger: card,
+          start: "top 80%",
+          toggleActions: "play none none none"
+        },
+        opacity: 0,
+        y: 50,
+        duration: 0.8,
+        ease: "power2.out"
+      });
+    });
+    
+    // Animate timeline items
+    gsap.utils.toArray('.timeline-item').forEach((item, i) => {
+      gsap.from(item, {
+        scrollTrigger: {
+          trigger: item,
+          start: "top 80%",
+          toggleActions: "play none none none"
+        },
+        opacity: 0,
+        x: i % 2 === 0 ? -50 : 50,
+        duration: 0.8,
+        delay: i * 0.1,
+        ease: "power2.out"
+      });
+    });
+    
+    // Easter Egg
+    let easterEggSequence = [];
+    const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    
+    document.addEventListener('keydown', (e) => {
+      easterEggSequence.push(e.key);
+      if (easterEggSequence.length > konamiCode.length) {
+        easterEggSequence.shift();
+      }
+      
+      if (arraysEqual(easterEggSequence, konamiCode)) {
+        document.getElementById('easter-egg-modal').classList.remove('hidden');
+        easterEggSequence = [];
+      }
+    });
+    
+    function arraysEqual(a, b) {
+      if (a.length !== b.length) return false;
+      for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) return false;
+      }
+      return true;
+    }
+    
+    document.getElementById('close-easter-egg').addEventListener('click', () => {
+      document.getElementById('easter-egg-modal').classList.add('hidden');
+    });
+    
+    document.getElementById('submit-guess').addEventListener('click', () => {
+      const guess = document.getElementById('model-guess').value.toLowerCase();
+      const feedback = document.getElementById('guess-feedback');
+      
+      if (guess.includes('cnn') || guess.includes('convolutional')) {
+        feedback.textContent = 'Correct! It\'s a Convolutional Neural Network (CNN).';
+        feedback.classList.remove('hidden');
+        feedback.classList.add('text-primary');
+      } else {
+        feedback.textContent = 'Not quite! Try thinking about image processing models.';
+        feedback.classList.remove('hidden');
+        feedback.classList.add('text-secondary');
+      }
+    });
+    
+    // Contact Form
+    document.getElementById('contact-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // In a real implementation, you would send the form data to a server
+      // For this demo, we'll just show a success message
+      alert('Message sent successfully! (This is a demo - no actual message was sent)');
+      this.reset();
+    });
+    
+    // 3D Model with Three.js
+    function init3DModel() {
+      const container = document.getElementById('model-container');
+      const canvas = document.getElementById('model-canvas');
+      
+      // Set canvas size
+      canvas.width = container.offsetWidth;
+      canvas.height = container.offsetHeight;
+      
+      // Create scene
+      const scene = new THREE.Scene();
+      
+      // Create camera
+      const camera = new THREE.PerspectiveCamera(75, canvas.width / canvas.height, 0.1, 1000);
+      camera.position.z = 5;
+      
+      // Create renderer
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+      renderer.setSize(canvas.width, canvas.height);
+      renderer.setClearColor(0x0a0a14, 1);
+      
+      // Add lights
+      const ambientLight = new THREE.AmbientLight(0x404040);
+      scene.add(ambientLight);
+      
+      const directionalLight = new THREE.DirectionalLight(0x00f0ff, 0.8);
+      directionalLight.position.set(1, 1, 1);
+      scene.add(directionalLight);
+      
+      const directionalLight2 = new THREE.DirectionalLight(0xff00f0, 0.8);
+      directionalLight2.position.set(-1, -1, -1);
+      scene.add(directionalLight2);
+      
+      // Create neural network visualization
+      const layers = 5;
+      const nodesPerLayer = [3, 4, 5, 4, 2];
+      const nodeSize = 0.15;
+      const layerSpacing = 1.5;
+      const nodeSpacing = 0.5;
+      
+      const nodes = [];
+      const connections = [];
+      
+      // Create nodes
+      for (let l = 0; l < layers; l++) {
+        const layerNodes = [];
+        const yOffset = -((nodesPerLayer[l] - 1) * nodeSpacing) / 2;
+        
+        for (let n = 0; n < nodesPerLayer[l]; n++) {
+          const nodeGeometry = new THREE.SSphereGeometry(nodeSize, 32, 32);
+          const nodeMaterial = new THREE.MeshPhongMaterial({ 
+            color: l === 0 ? 0x00f0ff : l === layers - 1 ? 0xff00f0 : 0xffffff,
+            emissive: l === 0 ? 0x00a0b0 : l === layers - 1 ? 0xb000a0 : 0x505050,
+            emissiveIntensity: 0.5,
+            shininess: 100
+          });
+          
+          const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
+          node.position.x = l * layerSpacing - ((layers - 1) * layerSpacing) / 2;
+          node.position.y = yOffset + n * nodeSpacing;
+          
+          scene.add(node);
+          layerNodes.push(node);
+          
+          // Add pulsing animation
+          animateNode(node);
+        }
+        
+        nodes.push(layerNodes);
+      }
+      
+      // Create connections
+      for (let l = 0; l < layers - 1; l++) {
+        for (let n1 = 0; n1 < nodes[l].length; n1++) {
+          for (let n2 = 0; n2 < nodes[l + 1].length; n2++) {
+            const start = nodes[l][n1].position;
+            const end = nodes[l + 1][n2].position;
+            
+            const distance = start.distanceTo(end);
+            const direction = new THREE.Vector3().subVectors(end, start).normalize();
+            const center = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
+            
+            const connectionGeometry = new THREE.CylinderGeometry(0.02, 0.02, distance, 8);
+            connectionGeometry.rotateX(Math.PI / 2);
+            
+            const connectionMaterial = new THREE.MeshPhongMaterial({
+              color: 0x888888,
+              transparent: true,
+              opacity: 0.3
+            });
+            
+            const connection = new THREE.Mesh(connectionGeometry, connectionMaterial);
+            connection.position.copy(center);
+            connection.lookAt(end);
+            
+            scene.add(connection);
+            connections.push(connection);
+          }
+        }
+      }
+      
+      // Add controls
+      const controls = new THREE.OrbitControls(camera, canvas);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      
+      // Animation loop
+      function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      
+      animate();
+      
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        canvas.width = container.offsetWidth;
+        canvas.height = container.offsetHeight;
+        camera.aspect = canvas.width / canvas.height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(canvas.width, canvas.height);
+      });
+      
+      // Node animation function
+      function animateNode(node) {
+        const scale = { x: 1, y: 1, z: 1 };
+        
+        gsap.to(scale, {
+          x: 1.3,
+          y: 1.3,
+          z: 1.3,
+          duration: 1 + Math.random(),
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inOut",
+          onUpdate: () => {
+            node.scale.set(scale.x, scale.y, scale.z);
+          }
+        });
+      }
+    }
+    
+    // Initialize 3D model when the page loads
+    window.addEventListener('load', init3DModel);
+    
+    // Particles.js Background
+    function initParticles() {
+      const particlesJSConfig = {
+        "particles": {
+          "number": {
+            "value": 80,
+            "density": {
+              "enable": true,
+              "value_area": 800
+            }
+          },
+          "color": {
+            "value": "#00f0ff"
+          },
+          "shape": {
+            "type": "circle",
+            "stroke": {
+              "width": 0,
+              "color": "#000000"
+            },
+            "polygon": {
+              "nb_sides": 5
+            }
+          },
+          "opacity": {
+            "value": 0.5,
+            "random": true,
+            "anim": {
+              "enable": true,
+              "speed": 1,
+              "opacity_min": 0.1,
+              "sync": false
+            }
+          },
+          "size": {
+            "value": 3,
+            "random": true,
+            "anim": {
+              "enable": true,
+              "speed": 2,
+              "size_min": 0.1,
+              "sync": false
+            }
+          },
+          "line_linked": {
+            "enable": true,
+            "distance": 150,
+            "color": "#00f0ff",
+            "opacity": 0.2,
+            "width": 1
+          },
+          "move": {
+            "enable": true,
+            "speed": 1,
+            "direction": "none",
+            "random": true,
+            "straight": false,
+            "out_mode": "out",
+            "bounce": false,
+            "attract": {
+              "enable": false,
+              "rotateX": 600,
+              "rotateY": 1200
+            }
+          }
+        },
+        "interactivity": {
+          "detect_on": "canvas",
+          "events": {
+            "onhover": {
+              "enable": true,
+              "mode": "grab"
+            },
+            "onclick": {
+              "enable": true,
+              "mode": "push"
+            },
+            "resize": true
+          },
+          "modes": {
+            "grab": {
+              "distance": 140,
+              "line_linked": {
+                "opacity": 1
+              }
+            },
+            "bubble": {
+              "distance": 400,
+              "size": 40,
+              "duration": 2,
+              "opacity": 8,
+              "speed": 3
+            },
+            "repulse": {
+              "distance": 200,
+              "duration": 0.4
+            },
+            "push": {
+              "particles_nb": 4
+            },
+            "remove": {
+              "particles_nb": 2
+            }
+          }
+        },
+        "retina_detect": true
+      };
+      
+      // Load particles.js if available
+      if (typeof particlesJS !== 'undefined') {
+        particlesJS('particles-js', particlesJSConfig);
+      }
+    }
+    
+    // Initialize particles when the page loads
+    window.addEventListener('load', initParticles);
+  </script>
+</body>
+</html>
